@@ -26,7 +26,7 @@
             overflow-x: hidden;
         }
 
-        /* --- WELCOME OVERLAY (Force Interaction for Autoplay) --- */
+        /* --- WELCOME OVERLAY --- */
         #overlay {
             position: fixed;
             top: 0;
@@ -42,200 +42,110 @@
             cursor: pointer;
             transition: opacity 0.8s ease;
         }
+        .overlay-content { text-align: center; animation: heartbeat 1.5s infinite; }
+        .overlay-content h1 { font-size: 3rem; margin: 0; color: var(--primary); }
+        .overlay-content p { font-size: 1.2rem; margin-top: 10px; opacity: 0.8; color: var(--text); }
 
-        .overlay-content {
-            text-align: center;
-            animation: heartbeat 1.5s infinite;
-        }
-
-        .overlay-content h1 {
-            font-size: 3rem;
-            margin: 0;
-            color: var(--primary);
-        }
-
-        .overlay-content p {
-            font-size: 1.2rem;
-            margin-top: 10px;
-            opacity: 0.8;
-            color: var(--text);
-        }
-
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        /* --- MAIN CONTENT --- */
-        .container {
-            max-width: 600px;
-            width: 90%;
-            padding: 2rem 1rem;
-            text-align: center;
-            z-index: 1;
-            /* Initially hidden until overlay is clicked */
-            opacity: 0; 
-            transition: opacity 1s ease;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 0px rgba(255, 192, 203, 0.5);
-        }
-
-        /* --- COUNTDOWN TIMER --- */
-        .timer-box {
-            background: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-            border: 2px solid var(--secondary);
-        }
-        .timer {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--primary);
-        }
-        .timer-label {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-        }
-
-        /* --- PHOTO GALLERY (Polaroid Style) --- */
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px;
-            margin-bottom: 2rem;
-        }
-
-        .polaroid {
-            background: white;
-            padding: 10px 10px 35px 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            transform: rotate(-2deg);
-            transition: transform 0.3s ease;
-        }
-
-        .polaroid:nth-child(even) {
-            transform: rotate(2deg);
-        }
-
-        .polaroid:hover {
-            transform: scale(1.1) rotate(0deg);
-            z-index: 10;
-        }
-
-        .polaroid img {
+        /* --- FLIGHT ANIMATION --- */
+        .flight-container {
             width: 100%;
-            height: auto;
-            border-radius: 2px;
-        }
-
-        /* --- INTERACTIVE REASONS --- */
-        .love-note-section {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 20px;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 25px rgba(217, 4, 41, 0.15);
-        }
-
-        .note-display {
-            font-size: 1.2rem;
-            font-style: italic;
-            min-height: 60px;
+            max-width: 600px;
             margin: 20px 0;
-            color: var(--primary);
-        }
-
-        button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 1rem;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: transform 0.2s;
-            box-shadow: 0 4px 10px rgba(217, 4, 41, 0.3);
-        }
-
-        button:hover {
-            transform: scale(1.05);
-            background: #b00020;
-        }
-
-        /* --- VOUCHER --- */
-        .voucher-container {
-            border: 3px dashed var(--primary);
-            padding: 20px;
-            background: #fff;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
             position: relative;
-            overflow: hidden;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
         }
-
-        .voucher-container:hover {
-            background-color: #fff0f3;
-        }
-
-        .hidden-voucher {
-            display: none;
-            text-align: left;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #ddd;
-            animation: expand 0.5s ease-out;
-        }
-
-        .ticket-item {
-            margin: 10px 0;
-            font-size: 1.1rem;
-        }
-
-        @keyframes expand {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Click effect hearts */
-        .click-heart {
+        .flight-line {
             position: absolute;
-            color: var(--primary);
-            animation: flyAway 1s ease-out forwards;
-            pointer-events: none;
+            top: 50%;
+            left: 50px;
+            right: 50px;
+            height: 2px;
+            background: repeating-linear-gradient(to right, var(--secondary) 0, var(--secondary) 5px, transparent 5px, transparent 10px);
+            z-index: 0;
+        }
+        .flag { font-size: 2rem; z-index: 1; }
+        .plane {
+            position: absolute;
             font-size: 1.5rem;
-            z-index: 100;
+            top: 15px;
+            left: 50px; /* Start pos */
+            animation: fly 4s linear infinite;
+            z-index: 2;
         }
+        @keyframes fly {
+            0% { left: 50px; transform: rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+            100% { left: calc(100% - 80px); transform: rotate(0deg); }
+        }
+
+        /* --- TIMELINE --- */
+        .timeline {
+            max-width: 500px;
+            width: 85%;
+            margin: 2rem 0;
+            position: relative;
+            border-left: 3px solid var(--secondary);
+            padding-left: 20px;
+            text-align: left;
+        }
+        .timeline-item {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '❤️';
+            position: absolute;
+            left: -29px;
+            top: 0;
+            background: var(--bg);
+            font-size: 1.2rem;
+        }
+        .t-date { font-weight: bold; color: var(--primary); font-size: 0.9rem; }
+        .t-content { background: white; padding: 10px 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-top: 5px; }
+
+        /* --- SEND LOVE BUTTON --- */
+        .send-love-btn {
+            background: #25D366; /* WhatsApp Green-ish */
+            margin-top: 20px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        /* --- MAIN STYLES (Existing) --- */
+        .container { max-width: 600px; width: 90%; padding: 2rem 1rem; text-align: center; z-index: 1; opacity: 0; transition: opacity 1s ease; }
+        h1 { font-size: 2.5rem; color: var(--primary); margin-bottom: 0.5rem; text-shadow: 2px 2px 0px rgba(255, 192, 203, 0.5); }
+        .timer-box { background: var(--card-bg); padding: 1.5rem; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 2rem; border: 2px solid var(--secondary); }
+        .timer { font-size: 1.8rem; font-weight: bold; color: var(--primary); }
+        .timer-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
         
-        /* Floating Hearts Background Animation */
-        .heart-bg {
-            position: fixed;
-            color: var(--secondary);
-            opacity: 0.3;
-            animation: floatUp 10s linear infinite;
-            z-index: -1;
-        }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 2rem; }
+        .polaroid { background: white; padding: 10px 10px 35px 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transform: rotate(-2deg); transition: transform 0.3s ease; }
+        .polaroid:nth-child(even) { transform: rotate(2deg); }
+        .polaroid:hover { transform: scale(1.1) rotate(0deg); z-index: 10; }
+        .polaroid img { width: 100%; height: auto; border-radius: 2px; }
 
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
-            50% { opacity: 0.5; }
-            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-        }
+        .love-note-section { background: var(--card-bg); padding: 2rem; border-radius: 20px; margin-bottom: 2rem; box-shadow: 0 10px 25px rgba(217, 4, 41, 0.15); }
+        .note-display { font-size: 1.2rem; font-style: italic; min-height: 60px; margin: 20px 0; color: var(--primary); }
+        
+        button { background: var(--primary); color: white; border: none; padding: 12px 25px; font-size: 1rem; border-radius: 50px; cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 10px rgba(217, 4, 41, 0.3); }
+        button:hover { transform: scale(1.05); background: #b00020; }
 
-        @keyframes flyAway {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
-        }
+        .voucher-container { border: 3px dashed var(--primary); padding: 20px; background: #fff; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; margin-bottom: 50px;}
+        .hidden-voucher { display: none; text-align: left; margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd; animation: expand 0.5s ease-out; }
+        .ticket-item { margin: 10px 0; font-size: 1.1rem; }
+
+        /* Animations */
+        @keyframes expand { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .click-heart { position: absolute; color: var(--primary); animation: flyAway 1s ease-out forwards; pointer-events: none; font-size: 1.5rem; z-index: 100; }
+        @keyframes flyAway { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-100px) scale(1.5); opacity: 0; } }
+        .heart-bg { position: fixed; color: var(--secondary); opacity: 0.3; animation: floatUp 10s linear infinite; z-index: -1; }
+        @keyframes floatUp { 0% { transform: translateY(100vh) scale(0.5); opacity: 0; } 50% { opacity: 0.5; } 100% { transform: translateY(-10vh) scale(1); opacity: 0; } }
     </style>
 </head>
 <body onclick="createHeart(event)">
@@ -252,9 +162,40 @@
         <h1>Happy Valentine's ❤️</h1>
         <p>Malaysia is 8 hours ahead, but you're always my priority.</p>
 
+        <div class="flight-container">
+            <div class="flag">🇬🇧</div>
+            <div class="flight-line"></div>
+            <div class="plane">✈️</div>
+            <div class="flag">🇲🇾</div>
+        </div>
+
         <div class="timer-box">
             <div class="timer-label">Time Until I'm Back in Malaysia</div>
             <div id="countdown" class="timer">Loading...</div>
+        </div>
+
+        <div class="timeline">
+            <h3 style="margin-left: -20px; margin-bottom: 20px; color: var(--primary);">Our Journey</h3>
+            
+            <div class="timeline-item">
+                <div class="t-date">The Beginning</div>
+                <div class="t-content">When we first met & my life changed.</div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="t-date">2023</div>
+                <div class="t-content">We became official. ❤️</div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="t-date">Now</div>
+                <div class="t-content">Handling Long Distance like champions.</div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="t-date">June 10, 2026</div>
+                <div class="t-content"><strong>The Reunion!</strong> (Can't wait)</div>
+            </div>
         </div>
 
         <div class="gallery">
@@ -275,6 +216,11 @@
             <button onclick="newReason(event)">Tell me another reason</button>
         </div>
 
+        <div style="margin-bottom: 30px;">
+            <p>Miss me right now?</p>
+            <button class="send-love-btn" onclick="sendSignal(event, this)">📡 Send Love to UK</button>
+        </div>
+
         <audio id="bg-music" loop>
             <source src="song.mp3" type="audio/mpeg">
         </audio>
@@ -284,150 +230,93 @@
             <div id="voucher-content" class="hidden-voucher">
                 <h2 style="text-align: center; color: var(--primary);">🎟️ OFFICIAL COUPON 🎟️</h2>
                 <p style="text-align: center;">This coupon entitles the bearer to:</p>
-                
-                <div class="ticket-item">
-                    🛍️ <strong>1x Shopping Spree</strong><br>
-                    <span style="font-size: 0.9em; color: #666;">(Target: Onitsuka Tigers / Sneakers)</span>
-                </div>
-                
-                <div class="ticket-item">
-                    🍽️ <strong>1x Romantic Dinner</strong><br>
-                    <span style="font-size: 0.9em; color: #666;">(Location: Your choice in KL/Melaka)</span>
-                </div>
-                
+                <div class="ticket-item">🛍️ <strong>1x Shopping Spree</strong><br><span style="font-size: 0.9em; color: #666;">(Target: Onitsuka Tigers / Sneakers)</span></div>
+                <div class="ticket-item">🍽️ <strong>1x Romantic Dinner</strong><br><span style="font-size: 0.9em; color: #666;">(Location: Your choice in KL/Melaka)</span></div>
                 <hr style="border: 0; border-top: 1px dashed #ccc; margin: 15px 0;">
-                
-                <p style="text-align: center; font-size: 0.9em;">
-                    <strong>Valid:</strong> June 2026 (When I return)<br>
-                    <strong>Signed:</strong> Er Zhi Zheng<br>
-                    <strong>Cost:</strong> Free (I'm paying!)
-                </p>
+                <p style="text-align: center; font-size: 0.9em;"><strong>Valid:</strong> June 2026 (When I return)<br><strong>Signed:</strong> Er Zhi Zheng<br><strong>Cost:</strong> Free (I'm paying!)</p>
             </div>
         </div>
-
     </div>
 
     <script>
-        // --- 1. START EXPERIENCE (Remove Overlay + Play Music) ---
+        // --- 1. START EXPERIENCE ---
         function startExperience() {
             const overlay = document.getElementById('overlay');
             const mainContent = document.getElementById('main-content');
             const audio = document.getElementById('bg-music');
-
-            // Fade out overlay
             overlay.style.opacity = '0';
-            
-            // Wait for fade to finish, then remove overlay and show content
             setTimeout(() => {
                 overlay.style.display = 'none';
                 mainContent.style.opacity = '1';
-                
-                // Play audio
-                audio.play().catch(error => {
-                    console.log("Audio play failed: " + error);
-                    // Fallback: If autoplay still fails, maybe show a small play button
-                });
+                audio.play().catch(e => console.log("Audio play failed"));
             }, 800);
         }
 
-        // --- 2. COUNTDOWN TIMER ---
-        // Set to June 10, 2026 (Month is 0-indexed, so June is 5)
-        const reunionDate = new Date(2026, 5, 10, 0, 0, 0).getTime();
-
+        // --- 2. COUNTDOWN ---
+        const reunionDate = new Date(2026, 5, 7, 0, 0, 0).getTime();
         function updateTimer() {
             const now = new Date().getTime();
             const distance = reunionDate - now;
-
-            if (distance < 0) {
-                document.getElementById("countdown").innerHTML = "I'M HERE!";
-                return;
-            }
-
+            if (distance < 0) { document.getElementById("countdown").innerHTML = "I'M HERE!"; return; }
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById("countdown").innerHTML = 
-                days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+            document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s";
         }
         setInterval(updateTimer, 1000);
 
-        // --- 3. REASONS GENERATOR ---
-        const reasons = [
-            "I miss your smile.",
-            "I miss our dinner date.",
-            "I miss eating Malaysian food with you.",
-            "I miss holding your hand.",
-            "I miss sleeping with you.",
-            "I miss watching movie with you.",
-            "I miss travelling with you.",
-            "I miss staying beside you.",
-            "I simply miss YOU."
-        ];
-
+        // --- 3. REASONS ---
+        const reasons = [ "I miss your smile.", "I miss our dinner date.", "I miss eating Malaysian food with you.", "I miss holding your hand.", "I miss sleeping with you.", "I miss watching movie with you.", "I miss travelling with you.", "I miss staying beside you.", "I simply miss YOU." ];
         function newReason(e) {
-            e.stopPropagation(); // Prevent heart from popping up on button click
+            e.stopPropagation();
             const display = document.getElementById("note-text");
             const randomReason = reasons[Math.floor(Math.random() * reasons.length)];
             display.style.opacity = 0;
-            setTimeout(() => {
-                display.innerText = randomReason;
-                display.style.opacity = 1;
-            }, 200);
+            setTimeout(() => { display.innerText = randomReason; display.style.opacity = 1; }, 200);
         }
 
-        // --- 4. VOUCHER REVEAL ---
+        // --- 4. SEND LOVE SIGNAL ---
+        function sendSignal(e, btn) {
+            e.stopPropagation();
+            btn.innerHTML = "❤️ Sending...";
+            setTimeout(() => {
+                btn.innerHTML = "Signal Received in UK! 🇬🇧";
+                btn.style.background = "#d90429";
+                alert("Signal sent! I'll feel it in the UK. ❤️");
+            }, 1500);
+        }
+
+        // --- 5. VOUCHER ---
         function revealVoucher(e) {
-            // Don't trigger if clicking the audio player
             if(e.target.tagName === 'AUDIO') return;
-            
             const content = document.getElementById("voucher-content");
             const header = document.querySelector('.voucher-container h3');
-            
-            if (content.style.display !== "block") {
-                content.style.display = "block";
-                header.innerText = "🎉 SURPRISE REVEALED! 🎉";
-            }
+            if (content.style.display !== "block") { content.style.display = "block"; header.innerText = "🎉 SURPRISE REVEALED! 🎉"; }
         }
 
-        // --- 5. FLOATING HEARTS ON CLICK ---
+        // --- 6. FLOATING HEARTS ---
         function createHeart(e) {
-            // Don't create heart if clicking button or audio or overlay
             if(e.target.tagName === 'BUTTON' || e.target.tagName === 'AUDIO' || e.target.id === 'overlay') return;
-
             const heart = document.createElement("div");
             heart.classList.add("click-heart");
             heart.innerText = "❤️";
             heart.style.left = e.clientX + "px";
             heart.style.top = e.clientY + "px";
-            // Randomize size slightly
-            const size = Math.random() * 1.5 + 0.5; 
-            heart.style.fontSize = size + "rem";
-            
+            heart.style.fontSize = (Math.random() * 1.5 + 0.5) + "rem";
             document.body.appendChild(heart);
-
-            setTimeout(() => {
-                heart.remove();
-            }, 1000);
+            setTimeout(() => { heart.remove(); }, 1000);
         }
-        
-        // --- 6. BACKGROUND ANIMATION ---
         function createBgHearts() {
-            const bgContainer = document.createElement('div');
-            bgContainer.className = 'heart-bg';
-            bgContainer.innerText = '❤️';
-            bgContainer.style.left = Math.random() * 100 + 'vw';
-            bgContainer.style.animationDuration = (Math.random() * 5 + 5) + 's';
-            bgContainer.style.fontSize = (Math.random() * 2 + 1) + 'rem';
-            document.body.appendChild(bgContainer);
-            
-            setTimeout(() => {
-                bgContainer.remove();
-            }, 10000);
+            const bg = document.createElement('div');
+            bg.className = 'heart-bg';
+            bg.innerText = '❤️';
+            bg.style.left = Math.random() * 100 + 'vw';
+            bg.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            document.body.appendChild(bg);
+            setTimeout(() => { bg.remove(); }, 10000);
         }
         setInterval(createBgHearts, 2000);
-
     </script>
 </body>
 </html>
