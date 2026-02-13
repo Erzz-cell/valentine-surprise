@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day!</title>
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #ff8fa3;
+            --bg: #fff0f3;
+            --text: #590d22;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 90%;
+            padding: 2rem 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            animation: fadeIn 2s ease-in;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Heart Animation */
+        .heart {
+            font-size: 4rem;
+            color: var(--primary);
+            animation: heartbeat 1.5s infinite;
+            margin: 1rem 0;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Countdown Card */
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.2);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-top: 1rem;
+        }
+
+        /* Interactive Voucher */
+        .voucher-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .voucher-btn:hover {
+            background-color: #d90429;
+            transform: scale(1.05);
+        }
+
+        .hidden-content {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff;
+            border: 2px dashed var(--primary);
+            border-radius: 10px;
+        }
+
+        .footer {
+            margin-top: auto;
+            padding: 2rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="heart">❤️</div>
+        <h1>Happy Valentine's Day</h1>
+        <p>Even though we are miles apart, you are always in my heart.</p>
+
+        <div class="card">
+            <h3>Counting Down To Our Reunion</h3>
+            <p>I can't wait to see you again.</p>
+            <div id="countdown" class="timer">Loading...</div>
+        </div>
+
+        <div class="card">
+            <h3>A Note for You</h3>
+            <p style="text-align: left;">
+                Hey! <br><br>
+                I know distance is hard, especially on days like today. But I wanted to make something small to remind you that I'm thinking of you constantly (even with the time difference!).
+                <br><br>
+                Thank you for being my rock.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>I owe you a date!</h3>
+            <p>Click below to reveal your gift.</p>
+            <button class="voucher-btn" onclick="revealGift()">Open Surprise</button>
+            
+            <div id="gift" class="hidden-content">
+                <h2>🎟️ REDEEMABLE VOUCHER 🎟️</h2>
+                <p><strong>Valid for:</strong> One Shopping Date & Dinner</p>
+                <p><strong>Location:</strong> Malaysia</p>
+                <p><strong>Expires:</strong> Never</p>
+		<p><strong>Budget:</strong> Unlimited</p>
+                <p style="font-size: 0.9em; color: gray;">(I'm paying!)</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Made with ❤️ from the UK
+    </div>
+
+    <script>
+        // --- CONFIGURATION: EDIT THE DATE BELOW ---
+        // Set the date you fly back to Malaysia (Year, Month-1, Day)
+        // Note: Month is 0-indexed (June is 5, not 6)
+        const reunionDate = new Date(2026, 5, 7, 0, 0, 0).getTime(); 
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = reunionDate - now;
+
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = "I'M HOME! ❤️";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+            document.getElementById("countdown").innerHTML = 
+                days + "d " + hours + "h " + minutes + "m ";
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call
+
+        function revealGift() {
+            const gift = document.getElementById('gift');
+            const btn = document.querySelector('.voucher-btn');
+            
+            if (gift.style.display === "block") {
+                return;
+            }
+            
+            gift.style.display = "block";
+            btn.style.display = "none";
+            
+            // Celebration confetti effect (simple text based)
+            gift.scrollIntoView({behavior: "smooth"});
+        }
+    </script>
+</body>
+</html>
