@@ -26,27 +26,57 @@
             overflow-x: hidden;
         }
 
-        /* Floating Hearts Background Animation */
-        .heart-bg {
+        /* --- WELCOME OVERLAY (Force Interaction for Autoplay) --- */
+        #overlay {
             position: fixed;
-            color: var(--secondary);
-            opacity: 0.3;
-            animation: floatUp 10s linear infinite;
-            z-index: -1;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff0f3;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.8s ease;
         }
 
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
-            50% { opacity: 0.5; }
-            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        .overlay-content {
+            text-align: center;
+            animation: heartbeat 1.5s infinite;
         }
 
+        .overlay-content h1 {
+            font-size: 3rem;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .overlay-content p {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            opacity: 0.8;
+            color: var(--text);
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- MAIN CONTENT --- */
         .container {
             max-width: 600px;
             width: 90%;
             padding: 2rem 1rem;
             text-align: center;
             z-index: 1;
+            /* Initially hidden until overlay is clicked */
+            opacity: 0; 
+            transition: opacity 1s ease;
         }
 
         h1 {
@@ -184,6 +214,22 @@
             animation: flyAway 1s ease-out forwards;
             pointer-events: none;
             font-size: 1.5rem;
+            z-index: 100;
+        }
+        
+        /* Floating Hearts Background Animation */
+        .heart-bg {
+            position: fixed;
+            color: var(--secondary);
+            opacity: 0.3;
+            animation: floatUp 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
         }
 
         @keyframes flyAway {
@@ -194,7 +240,15 @@
 </head>
 <body onclick="createHeart(event)">
 
-    <div class="container">
+    <div id="overlay" onclick="startExperience()">
+        <div class="overlay-content">
+            <h1>❤️</h1>
+            <h1>Tap to Open</h1>
+            <p>I have a surprise for you...</p>
+        </div>
+    </div>
+
+    <div class="container" id="main-content">
         <h1>Happy Valentine's ❤️</h1>
         <p>Malaysia is 8 hours ahead, but you're always my priority.</p>
 
@@ -221,13 +275,9 @@
             <button onclick="newReason(event)">Tell me another reason</button>
         </div>
 
-        <div style="margin: 20px 0;">
-            <p style="font-size: 0.8rem;">🎵 Play our song</p>
-            <audio controls style="width: 100%; max-width: 300px; border-radius: 30px;">
-                <source src="song.mp3" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
-        </div>
+        <audio id="bg-music" loop>
+            <source src="song.mp3" type="audio/mpeg">
+        </audio>
 
         <div class="voucher-container" onclick="revealVoucher(event)">
             <h3>🎁 TAP TO REVEAL GIFT 🎁</h3>
@@ -258,7 +308,29 @@
     </div>
 
     <script>
-        // --- 1. COUNTDOWN TIMER ---
+        // --- 1. START EXPERIENCE (Remove Overlay + Play Music) ---
+        function startExperience() {
+            const overlay = document.getElementById('overlay');
+            const mainContent = document.getElementById('main-content');
+            const audio = document.getElementById('bg-music');
+
+            // Fade out overlay
+            overlay.style.opacity = '0';
+            
+            // Wait for fade to finish, then remove overlay and show content
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                mainContent.style.opacity = '1';
+                
+                // Play audio
+                audio.play().catch(error => {
+                    console.log("Audio play failed: " + error);
+                    // Fallback: If autoplay still fails, maybe show a small play button
+                });
+            }, 800);
+        }
+
+        // --- 2. COUNTDOWN TIMER ---
         // Set to June 10, 2026 (Month is 0-indexed, so June is 5)
         const reunionDate = new Date(2026, 5, 10, 0, 0, 0).getTime();
 
@@ -281,16 +353,16 @@
         }
         setInterval(updateTimer, 1000);
 
-        // --- 2. REASONS GENERATOR ---
+        // --- 3. REASONS GENERATOR ---
         const reasons = [
             "I miss your smile.",
             "I miss our dinner date.",
             "I miss eating Malaysian food with you.",
             "I miss holding your hand.",
             "I miss sleeping with you.",
-	    "I miss watching movie with you.",
-	    "I miss travelling with you.",
-	    "I miss staying beside you.",
+            "I miss watching movie with you.",
+            "I miss travelling with you.",
+            "I miss staying beside you.",
             "I simply miss YOU."
         ];
 
@@ -305,7 +377,7 @@
             }, 200);
         }
 
-        // --- 3. VOUCHER REVEAL ---
+        // --- 4. VOUCHER REVEAL ---
         function revealVoucher(e) {
             // Don't trigger if clicking the audio player
             if(e.target.tagName === 'AUDIO') return;
@@ -319,10 +391,10 @@
             }
         }
 
-        // --- 4. FLOATING HEARTS ON CLICK ---
+        // --- 5. FLOATING HEARTS ON CLICK ---
         function createHeart(e) {
-            // Don't create heart if clicking button or audio
-            if(e.target.tagName === 'BUTTON' || e.target.tagName === 'AUDIO') return;
+            // Don't create heart if clicking button or audio or overlay
+            if(e.target.tagName === 'BUTTON' || e.target.tagName === 'AUDIO' || e.target.id === 'overlay') return;
 
             const heart = document.createElement("div");
             heart.classList.add("click-heart");
@@ -340,7 +412,7 @@
             }, 1000);
         }
         
-        // --- 5. BACKGROUND ANIMATION ---
+        // --- 6. BACKGROUND ANIMATION ---
         function createBgHearts() {
             const bgContainer = document.createElement('div');
             bgContainer.className = 'heart-bg';
