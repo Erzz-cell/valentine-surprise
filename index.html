@@ -111,3 +111,248 @@
         /* --- INTERACTIVE REASONS --- */
         .love-note-section {
             background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px rgba(217, 4, 41, 0.15);
+        }
+
+        .note-display {
+            font-size: 1.2rem;
+            font-style: italic;
+            min-height: 60px;
+            margin: 20px 0;
+            color: var(--primary);
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 10px rgba(217, 4, 41, 0.3);
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background: #b00020;
+        }
+
+        /* --- VOUCHER --- */
+        .voucher-container {
+            border: 3px dashed var(--primary);
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .voucher-container:hover {
+            background-color: #fff0f3;
+        }
+
+        .hidden-voucher {
+            display: none;
+            text-align: left;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            animation: expand 0.5s ease-out;
+        }
+
+        .ticket-item {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        @keyframes expand {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Click effect hearts */
+        .click-heart {
+            position: absolute;
+            color: var(--primary);
+            animation: flyAway 1s ease-out forwards;
+            pointer-events: none;
+            font-size: 1.5rem;
+        }
+
+        @keyframes flyAway {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body onclick="createHeart(event)">
+
+    <div class="container">
+        <h1>Happy Valentine's ❤️</h1>
+        <p>Malaysia is 8 hours ahead, but you're always my priority.</p>
+
+        <div class="timer-box">
+            <div class="timer-label">Time Until I'm Back in Malaysia</div>
+            <div id="countdown" class="timer">Loading...</div>
+        </div>
+
+        <div class="gallery">
+            <div class="polaroid">
+                <img src="photo1.jpg" alt="Us" onerror="this.src='https://via.placeholder.com/150/ffb3c1/590d22?text=Photo+1'">
+            </div>
+            <div class="polaroid">
+                <img src="photo2.jpg" alt="Memories" onerror="this.src='https://via.placeholder.com/150/ffb3c1/590d22?text=Photo+2'">
+            </div>
+            <div class="polaroid">
+                <img src="photo3.jpg" alt="Love" onerror="this.src='https://via.placeholder.com/150/ffb3c1/590d22?text=Photo+3'">
+            </div>
+        </div>
+
+        <div class="love-note-section">
+            <h3>Things I Miss About You</h3>
+            <div id="note-text" class="note-display">Click the button below...</div>
+            <button onclick="newReason(event)">Tell me another reason</button>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <p style="font-size: 0.8rem;">🎵 Play our song</p>
+            <audio controls style="width: 100%; max-width: 300px; border-radius: 30px;">
+                <source src="song.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="voucher-container" onclick="revealVoucher(event)">
+            <h3>🎁 TAP TO REVEAL GIFT 🎁</h3>
+            <div id="voucher-content" class="hidden-voucher">
+                <h2 style="text-align: center; color: var(--primary);">🎟️ OFFICIAL COUPON 🎟️</h2>
+                <p style="text-align: center;">This coupon entitles the bearer to:</p>
+                
+                <div class="ticket-item">
+                    🛍️ <strong>1x Shopping Spree</strong><br>
+                    <span style="font-size: 0.9em; color: #666;">(Target: Onitsuka Tigers / Sneakers)</span>
+                </div>
+                
+                <div class="ticket-item">
+                    🍽️ <strong>1x Romantic Dinner</strong><br>
+                    <span style="font-size: 0.9em; color: #666;">(Location: Your choice in KL/Melaka)</span>
+                </div>
+                
+                <hr style="border: 0; border-top: 1px dashed #ccc; margin: 15px 0;">
+                
+                <p style="text-align: center; font-size: 0.9em;">
+                    <strong>Valid:</strong> June 2026 (When I return)<br>
+                    <strong>Signed:</strong> Er Zhi Zheng<br>
+                    <strong>Cost:</strong> Free (I'm paying!)
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. COUNTDOWN TIMER ---
+        // Set to June 10, 2026 (Month is 0-indexed, so June is 5)
+        const reunionDate = new Date(2026, 5, 10, 0, 0, 0).getTime();
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = reunionDate - now;
+
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = "I'M HERE!";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerHTML = 
+                days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+        }
+        setInterval(updateTimer, 1000);
+
+        // --- 2. REASONS GENERATOR ---
+        const reasons = [
+            "I miss your smile.",
+            "I miss our late night calls.",
+            "I miss eating Malaysian food with you.",
+            "I miss holding your hand.",
+            "I miss your laugh when I say something stupid.",
+            "I simply miss YOU."
+        ];
+
+        function newReason(e) {
+            e.stopPropagation(); // Prevent heart from popping up on button click
+            const display = document.getElementById("note-text");
+            const randomReason = reasons[Math.floor(Math.random() * reasons.length)];
+            display.style.opacity = 0;
+            setTimeout(() => {
+                display.innerText = randomReason;
+                display.style.opacity = 1;
+            }, 200);
+        }
+
+        // --- 3. VOUCHER REVEAL ---
+        function revealVoucher(e) {
+            // Don't trigger if clicking the audio player
+            if(e.target.tagName === 'AUDIO') return;
+            
+            const content = document.getElementById("voucher-content");
+            const header = document.querySelector('.voucher-container h3');
+            
+            if (content.style.display !== "block") {
+                content.style.display = "block";
+                header.innerText = "🎉 SURPRISE REVEALED! 🎉";
+            }
+        }
+
+        // --- 4. FLOATING HEARTS ON CLICK ---
+        function createHeart(e) {
+            // Don't create heart if clicking button or audio
+            if(e.target.tagName === 'BUTTON' || e.target.tagName === 'AUDIO') return;
+
+            const heart = document.createElement("div");
+            heart.classList.add("click-heart");
+            heart.innerText = "❤️";
+            heart.style.left = e.clientX + "px";
+            heart.style.top = e.clientY + "px";
+            // Randomize size slightly
+            const size = Math.random() * 1.5 + 0.5; 
+            heart.style.fontSize = size + "rem";
+            
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 1000);
+        }
+        
+        // --- 5. BACKGROUND ANIMATION ---
+        function createBgHearts() {
+            const bgContainer = document.createElement('div');
+            bgContainer.className = 'heart-bg';
+            bgContainer.innerText = '❤️';
+            bgContainer.style.left = Math.random() * 100 + 'vw';
+            bgContainer.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            bgContainer.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+            document.body.appendChild(bgContainer);
+            
+            setTimeout(() => {
+                bgContainer.remove();
+            }, 10000);
+        }
+        setInterval(createBgHearts, 2000);
+
+    </script>
+</body>
+</html>
